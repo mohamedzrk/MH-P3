@@ -171,18 +171,23 @@ def generar_vecinos_por_cambio(solucion, n_slots, aulas_validas):
     return vecinos
 
 
-def busqueda_primer_mejor(sol_inicial, capacidades, estudiantes_por_examen, student_exams_dict, n_slots, aulas_validas, max_evals):
+def busqueda_primer_mejor(sol_inicial, capacidades, estudiantes_por_examen, student_exams_dict, n_slots, aulas_validas, max_evals, limite_tiempo=60):
     s_actual = sol_inicial.copy()
     coste_actual = evaluar_solucion(s_actual, capacidades, estudiantes_por_examen, student_exams_dict, n_slots)
     
     mejora = True
     evals = 0
+    tiempo_inicio = time.time()
     
     while mejora == True and evals < max_evals:
+        if time.time() - tiempo_inicio >= limite_tiempo:
+            break
         mejora = False
         vecindario = generar_vecinos_por_cambio(s_actual, n_slots, aulas_validas)
         
         for vecino in vecindario:
+            if time.time() - tiempo_inicio >= limite_tiempo:
+                break
             coste_vecino = evaluar_solucion(vecino, capacidades, estudiantes_por_examen, student_exams_dict, n_slots)
             evals = evals + 1
             
@@ -196,14 +201,17 @@ def busqueda_primer_mejor(sol_inicial, capacidades, estudiantes_por_examen, stud
     return s_actual, coste_actual, evals
 
 
-def busqueda_del_mejor(sol_inicial, capacidades, estudiantes_por_examen, student_exams_dict, n_slots, aulas_validas, max_evals):
+def busqueda_del_mejor(sol_inicial, capacidades, estudiantes_por_examen, student_exams_dict, n_slots, aulas_validas, max_evals, limite_tiempo=60):
     s_actual = sol_inicial.copy()
     coste_actual = evaluar_solucion(s_actual, capacidades, estudiantes_por_examen, student_exams_dict, n_slots)
     
     mejora = True
     evals = 0
+    tiempo_inicio = time.time()
     
     while mejora == True and evals < max_evals:
+        if time.time() - tiempo_inicio >= limite_tiempo:
+            break
         mejora = False
         mejor_vecino = s_actual
         mejor_coste_vecino = coste_actual
@@ -211,6 +219,8 @@ def busqueda_del_mejor(sol_inicial, capacidades, estudiantes_por_examen, student
         vecindario = generar_vecinos_por_cambio(s_actual, n_slots, aulas_validas)
         
         for vecino in vecindario:
+            if time.time() - tiempo_inicio >= limite_tiempo:
+                break
             coste_vecino = evaluar_solucion(vecino, capacidades, estudiantes_por_examen, student_exams_dict, n_slots)
             evals = evals + 1
             
